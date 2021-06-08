@@ -28,6 +28,7 @@ import se.curity.identityserver.sdk.attribute.SubjectAttributes
 import se.curity.identityserver.sdk.authentication.AuthenticatedSessions
 import se.curity.identityserver.sdk.authenticationaction.AuthenticationAction
 import se.curity.identityserver.sdk.authenticationaction.AuthenticationActionResult
+import se.curity.identityserver.sdk.authenticationaction.AuthenticationActionResult.failedResult
 import se.curity.identityserver.sdk.authenticationaction.AuthenticationActionResult.successfulResult
 import se.curity.identityserver.sdk.authenticationaction.completions.RequiredActionCompletion.PromptUser.prompt
 import se.curity.identityserver.sdk.service.authenticationaction.AuthenticatorDescriptor
@@ -61,16 +62,13 @@ class IdentityPickerAuthenticationAction(private val config: IdentityPickerAuthe
         val identityList = authenticationAttributes.subjectAttributes[config.identityListAttribute()]?.attributeValue
                 as? ListAttributeValue
 
-        if (logger.isDebugEnabled)
-        {
-            logger.debug("Received list of identities: $identityList")
-        }
+        logger.debug("Received list of identities: $identityList")
 
         if (identityList == null)
         {
             logger.info("User with with subject '${authenticationAttributes.subject} did not have a list of " +
-                    "identities to chose from. Keeping current identity")
-            return successfulResult(authenticationAttributes)
+                    "identities to chose from")
+            return failedResult("No acccount available")
         }
 
 
