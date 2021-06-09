@@ -68,7 +68,7 @@ class IdentityPickerAuthenticationAction(private val config: IdentityPickerAuthe
         {
             logger.info("User with with subject '${authenticationAttributes.subject} did not have a list of " +
                     "identities to chose from")
-            return failedResult("No acccount available")
+            return failedResult("No account available")
         }
 
 
