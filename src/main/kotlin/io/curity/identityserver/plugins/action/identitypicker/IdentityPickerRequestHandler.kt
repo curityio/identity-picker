@@ -17,7 +17,7 @@
 
 package io.curity.identityserver.plugins.action.identitypicker
 
-import org.hibernate.validator.constraints.NotBlank
+import javax.validation.constraints.NotBlank
 import se.curity.identityserver.sdk.attribute.Attribute
 import se.curity.identityserver.sdk.attribute.ListAttributeValue
 import se.curity.identityserver.sdk.attribute.MapAttributeValue
