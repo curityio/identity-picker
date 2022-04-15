@@ -17,7 +17,9 @@
 
 package io.curity.identityserver.plugins.action.identitypicker
 
-import org.hibernate.validator.constraints.NotBlank
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import se.curity.identityserver.sdk.attribute.Attribute
 import se.curity.identityserver.sdk.attribute.ListAttributeValue
 import se.curity.identityserver.sdk.attribute.MapAttributeValue
@@ -29,8 +31,6 @@ import se.curity.identityserver.sdk.web.Response
 import se.curity.identityserver.sdk.web.ResponseModel.templateResponseModel
 import java.lang.RuntimeException
 import java.util.Optional
-import javax.validation.Valid
-import javax.validation.constraints.NotNull
 
 private const val IDENTITIES_TEMPLATE_KEY = "_identities"
 
