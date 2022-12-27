@@ -13,9 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.curityVersion>6.7.0</project.curityVersion>
-        <project.slf4jVersion>1.7.30</project.slf4jVersion>
-        <kotlin.version>1.5.32</kotlin.version>
+        <project.curityVersion>7.0.0</project.curityVersion>
+        <project.slf4jVersion>1.7.36</project.slf4jVersion>
+        <kotlin.version>1.6.10</kotlin.version>
+        <maven.surefireVersion>3.0.0-M7</maven.surefireVersion>
     </properties>
 
     <build>
@@ -43,17 +44,26 @@
                     <execution>
                         <id>compile</id>
                         <phase>compile</phase>
-                        <goals><goal>compile</goal></goals>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>test-compile</id>
                         <phase>test-compile</phase>
-                        <goals><goal>test-compile</goal></goals>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>11</jvmTarget>
+                    <jvmTarget>17</jvmTarget>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefireVersion}</version>
             </plugin>
         </plugins>
     </build>
@@ -78,15 +88,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.2.0.CR1</version>
+            <version>7.0.3.Final</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
