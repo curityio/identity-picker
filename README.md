@@ -1,5 +1,8 @@
 # IdentityPicker Authentication Action Plugin
 
+[![Quality](https://img.shields.io/badge/quality-demo-red)](https://curity.io/resources/code-examples/status/)
+[![Availability](https://img.shields.io/badge/availability-source-blue)](https://curity.io/resources/code-examples/status/)
+
 
 A custom, Kotlin-based authentication action plugin for the Curity Identity Server. This plugin expects an attribute in the authentication attributes that contain a list of accounts that the user can select to act as.
 
