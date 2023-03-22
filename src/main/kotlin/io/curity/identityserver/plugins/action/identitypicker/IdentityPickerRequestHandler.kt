@@ -33,7 +33,8 @@ import se.curity.identityserver.sdk.web.Response.ResponseModelScope.ANY
 import se.curity.identityserver.sdk.web.ResponseModel.templateResponseModel
 import java.util.Optional
 
-private const val IDENTITIES_TEMPLATE_KEY = "_identities"
+const val IDENTITIES_TEMPLATE_KEY = "_identities"
+const val SELECTED_IDENTITY_INDEX_KEY = "identity-index"
 private const val DISPLAY_NAME_ATTRIBUTE_NAME = "_displayNameAttribute"
 
 class IdentityPickerRequestHandler(private val config: IdentityPickerAuthenticationActionConfig) :
@@ -105,7 +106,7 @@ class IdentityPickerRequestModel(request: Request, sessionManager: SessionManage
 
     class PostRequestModel(request: Request) {
         @NotBlank(message = "error.no.selected.identity")
-        val identityIndex: String? = request.getFormParameterValues("identity-index").firstOrNull()
+        val identityIndex: String? = request.getFormParameterValues(SELECTED_IDENTITY_INDEX_KEY).firstOrNull()
     }
 
     class GetRequestModel(sessionManager: SessionManager) {
