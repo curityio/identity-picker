@@ -22,10 +22,9 @@ import se.curity.identityserver.sdk.attribute.AttributeValue
 import se.curity.identityserver.sdk.attribute.AuthenticationAttributes
 import se.curity.identityserver.sdk.attribute.ContextAttributes
 import se.curity.identityserver.sdk.attribute.SubjectAttributes
-import se.curity.identityserver.sdk.authentication.AuthenticatedSessions
+import se.curity.identityserver.sdk.authenticationaction.AuthenticationActionContext
 import se.curity.identityserver.sdk.authenticationaction.AuthenticationActionResult
 import se.curity.identityserver.sdk.service.SessionManager
-import se.curity.identityserver.sdk.service.authenticationaction.AuthenticatorDescriptor
 import spock.lang.Specification
 
 class IdentityPickerAuthenticationActionTest extends Specification {
@@ -60,8 +59,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
         def action = new IdentityPickerAuthenticationAction(config)
 
         when: "The action is invoked"
-        def authenticationResult = action.apply(authnAttributes, Mock(AuthenticatedSessions),
-                "abcd1234", Mock(AuthenticatorDescriptor))
+        def authenticationResult = action.apply(getActionContext(authnAttributes))
 
         then:
         authenticationResult instanceof AuthenticationActionResult.PendingCompletionAuthenticationActionResult
@@ -87,8 +85,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
         def action = new IdentityPickerAuthenticationAction(config)
 
         when: "The action is invoked"
-        def authenticationResult = action.apply(authnAttributes, Mock(AuthenticatedSessions),
-                "abcd1234", Mock(AuthenticatorDescriptor))
+        def authenticationResult = action.apply(getActionContext(authnAttributes))
 
         then:
         authenticationResult instanceof AuthenticationActionResult.SuccessAuthenticationActionResult
@@ -132,8 +129,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
         def action = new IdentityPickerAuthenticationAction(config)
 
         when: "The action is invoked"
-        def authenticationResult = action.apply(authnAttributes, Mock(AuthenticatedSessions),
-                "abcd1234", Mock(AuthenticatorDescriptor))
+        def authenticationResult = action.apply(getActionContext(authnAttributes))
 
         then:
         authenticationResult instanceof AuthenticationActionResult.SuccessAuthenticationActionResult
@@ -147,7 +143,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
     }
 
     def "When no identities are found, authentication is failed"() {
-        given: "Subject atttributes not containing identities"
+        given: "Subject attributes not containing identities"
         def authnAttributes = AuthenticationAttributes.of(SubjectAttributes.of("teddie"),
                 ContextAttributes.empty())
         and: "Mocks are setup"
@@ -160,10 +156,16 @@ class IdentityPickerAuthenticationActionTest extends Specification {
         def action = new IdentityPickerAuthenticationAction(config)
 
         when: "The action is invoked"
-        def authenticationResult = action.apply(authnAttributes, Mock(AuthenticatedSessions),
-                "abcd1234", Mock(AuthenticatorDescriptor))
+        def authenticationResult = action.apply(getActionContext(authnAttributes))
 
         then: "A failed result is received"
         authenticationResult instanceof AuthenticationActionResult.FailedAuthenticationActionResult
+    }
+
+    AuthenticationActionContext getActionContext(AuthenticationAttributes authnAttributes) {
+        def context = Mock(AuthenticationActionContext)
+        context.getAuthenticationAttributes() >> authnAttributes
+
+        return context
     }
 }
