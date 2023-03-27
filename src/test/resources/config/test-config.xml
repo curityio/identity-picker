@@ -13,7 +13,7 @@
         </script-transformer>
       </authentication-action>
       <authentication-action>
-        <id>pick-account</id>
+          <id>pick-identity</id>
         <identity-picker xmlns="https://curity.se/ns/ext-conf/identity-picker">
         </identity-picker>
       </authentication-action>
