@@ -20,6 +20,7 @@ package io.curity.identityserver.plugins.action.identitypicker
 import se.curity.identityserver.sdk.config.Configuration
 import se.curity.identityserver.sdk.config.annotation.DefaultString
 import se.curity.identityserver.sdk.config.annotation.Description
+import se.curity.identityserver.sdk.service.ExceptionFactory
 import se.curity.identityserver.sdk.service.Json
 import se.curity.identityserver.sdk.service.SessionManager
 
@@ -30,5 +31,15 @@ interface IdentityPickerAuthenticationActionConfig: Configuration
     @DefaultString("identities")
     fun identityListAttribute(): String
 
+    @Description("The attribute in the returned identity to be displayed to the user. " +
+            "The full identity is always returned to the template/haapi-client, so a combination of fields " +
+            "can always be created by renderer.")
+    @DefaultString("user_id")
+    fun displayNameAttribute(): String
+
     fun sessionManager(): SessionManager
+
+    fun json(): Json
+
+    fun exceptionFactory() : ExceptionFactory
 }

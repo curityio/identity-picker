@@ -22,9 +22,7 @@
     <p>#message("info.message")</p>
 
     #foreach ($key in $_identities.keySet())
-        ## List the user_id attribute on the button.
-        ## NOTE: If rebranding, make sure to keep the identity-index attribute, since that is used to identify which is selected
-        <a class="button button-primary button-fullwidth identity-button mb1" identity-index="$key">$_identities.get($key).user_id</a>
+        <a class="button button-primary button-fullwidth identity-button mb1" identity-index="$key">$_identities.get($key).get($_displayNameAttribute)</a>
     #end
     <input type="hidden" value="" name="identity-index"/>
     <a href="#">#message("forgot.subdomain")</a>

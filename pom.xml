@@ -6,21 +6,22 @@
 
     <groupId>io.curity.identityserver.plugins.action.identitypicker</groupId>
     <artifactId>identity-picker</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>Curity IdentityPicker Authentication Action</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.curityVersion>7.0.0</project.curityVersion>
-        <project.slf4jVersion>1.7.36</project.slf4jVersion>
+        <project.curityVersion>8.0.0</project.curityVersion>
+        <project.slf4jVersion>2.0.3</project.slf4jVersion>
         <kotlin.version>1.6.10</kotlin.version>
         <maven.surefireVersion>3.0.0-M7</maven.surefireVersion>
     </properties>
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
 
         <plugins>
             <plugin>
@@ -64,6 +65,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefireVersion}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -18,19 +18,22 @@
 package io.curity.identityserver.plugins.action.identitypicker
 
 import se.curity.identityserver.sdk.authenticationaction.completions.ActionCompletionRequestHandler
+import se.curity.identityserver.sdk.haapi.RepresentationFunction
 import se.curity.identityserver.sdk.plugin.descriptor.AuthenticationActionPluginDescriptor
 
 const val PLUGIN_TYPE = "identity-picker"
 
-class IdentityPickerAuthenticationActionDescriptor : AuthenticationActionPluginDescriptor<IdentityPickerAuthenticationActionConfig>
-{
+class IdentityPickerAuthenticationActionDescriptor :
+    AuthenticationActionPluginDescriptor<IdentityPickerAuthenticationActionConfig> {
     override fun getAuthenticationAction() = IdentityPickerAuthenticationAction::class.java
 
     override fun getPluginImplementationType() = PLUGIN_TYPE
 
     override fun getConfigurationType() = IdentityPickerAuthenticationActionConfig::class.java;
 
-    override fun getAuthenticationActionRequestHandlerTypes():
-            Map<String, Class<out ActionCompletionRequestHandler<*>>> =
-            mapOf("index" to IdentityPickerRequestHandler::class.java)
+    override fun getAuthenticationActionRequestHandlerTypes(): Map<String, Class<out ActionCompletionRequestHandler<*>>> =
+        mapOf("index" to IdentityPickerRequestHandler::class.java)
+
+    override fun getRepresentationFunctions(): Map<String, Class<out RepresentationFunction>> =
+        mapOf("index" to GetRepresentationFunction::class.java)
 }

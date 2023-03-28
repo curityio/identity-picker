@@ -1,0 +1,49 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+    <profiles xmlns="https://curity.se/ns/conf/base">
+    <profile>
+    <id>authentication</id>
+    <type xmlns:auth="https://curity.se/ns/conf/profile/authentication">auth:authentication-service</type>
+      <settings>
+      <authentication-service xmlns="https://curity.se/ns/conf/profile/authentication">
+      <authentication-actions>
+      <authentication-action>
+        <id>add-identities</id>
+        <script-transformer xmlns="https://curity.se/ns/ext-conf/script-transformer">
+          <transformation-procedure>add-identities</transformation-procedure>
+        </script-transformer>
+      </authentication-action>
+      <authentication-action>
+          <id>pick-identity</id>
+        <identity-picker xmlns="https://curity.se/ns/ext-conf/identity-picker">
+        </identity-picker>
+      </authentication-action>
+      <authentication-action>
+        <id>debug</id>
+        <debug-attribute xmlns="https://curity.se/ns/ext-conf/debug-attribute"/>
+      </authentication-action>
+      </authentication-actions>
+      <authenticators>
+        <authenticator>
+          <id>multi-ids</id>
+          <authentication-actions>
+            <login>add-identities</login>
+            <login>pick-identity</login>
+            <login>debug</login>
+          </authentication-actions>
+          <username xmlns="https://curity.se/ns/ext-conf/username">
+          </username>
+        </authenticator>
+        </authenticators>
+      </authentication-service>
+      </settings>
+  </profile>
+  </profiles>
+  <processing xmlns="https://curity.se/ns/conf/base">
+    <procedures>
+      <transformation-procedure>
+        <id>add-identities</id>
+        <script>LyoqCiAqIEBwYXJhbSB7c2UuY3VyaXR5LmlkZW50aXR5c2VydmVyLnByb2NlZHVyZXMuY29udGV4dC5UcmFuc2Zvcm1hdGlvblByb2NlZHVyZUNvbnRleHR9IGNvbnRleHQKICogQHJldHVybnMgeyp9CiAqLwpmdW5jdGlvbiByZXN1bHQoY29udGV4dCkgewogICAgdmFyIGF0dHJpYnV0ZXMgPSBjb250ZXh0LmF0dHJpYnV0ZU1hcDsKICAgIGF0dHJpYnV0ZXMuaWRlbnRpdGllcyA9IFt7CiAgICAgICAgdXNlcl9pZDogInVzZXIxIiwKICAgICAgICBhY2NvdW50X2lkOiAiaWQxIiwKICAgICAgICBzdWJkb21haW46ICJzdWIxIgogICAgfSwKICAgIHsKICAgICAgICB1c2VyX2lkOiAidXNlcjIiLAogICAgICAgIGFjY291bnRfaWQ6ICJpZDIiLAogICAgICAgIHN1YmRvbWFpbjogInN1YjIiCiAgICB9LAogICAgewogICAgICAgIHVzZXJfaWQ6ICJ1c2VyMyIsCiAgICAgICAgYWNjb3VudF9pZDogImlkMyIsCiAgICAgICAgc3ViZG9tYWluOiAic3ViMyIKICAgIH1dCiAgICByZXR1cm4gYXR0cmlidXRlczsKfQ==</script>
+      </transformation-procedure>
+    </procedures>
+  </processing>
+</config>
