@@ -18,11 +18,15 @@
 package io.curity.identityserver.plugins.action.identitypicker
 
 import se.curity.identityserver.sdk.config.Configuration
+import se.curity.identityserver.sdk.config.OneOf
+import se.curity.identityserver.sdk.config.annotation.DefaultBoolean
+import se.curity.identityserver.sdk.config.annotation.DefaultOption
 import se.curity.identityserver.sdk.config.annotation.DefaultString
 import se.curity.identityserver.sdk.config.annotation.Description
 import se.curity.identityserver.sdk.service.ExceptionFactory
 import se.curity.identityserver.sdk.service.Json
 import se.curity.identityserver.sdk.service.SessionManager
+import java.util.Optional
 
 interface IdentityPickerAuthenticationActionConfig: Configuration
 {
@@ -37,9 +41,18 @@ interface IdentityPickerAuthenticationActionConfig: Configuration
     @DefaultString("user_id")
     fun displayNameAttribute(): String
 
+    @Description("Keep the existing subject attributes and add the selected identity's attributes to an output attribute in the subject attributes.")
+    fun keepAttributes(): Optional<KeepAttributesConfiguration>
+
     fun sessionManager(): SessionManager
 
     fun json(): Json
 
     fun exceptionFactory() : ExceptionFactory
+
+    interface KeepAttributesConfiguration : Configuration {
+        @Description("The name of the output attribute in the subject attributes where the selected identity's attributes will be stored.")
+        @DefaultString("selected_identity")
+        fun selectedIdentityOutputAttribute(): String
+    }
 }

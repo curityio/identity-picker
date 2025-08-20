@@ -52,6 +52,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
         and: "Mocks setup to return the identities"
         def config = Mock(IdentityPickerAuthenticationActionConfig)
         config.identityListAttribute() >> IDENTITIES_ATTRIBUTE_NAME
+        config.keepAttributes() >> Optional.empty()
 
         def sessionManager = Mock(SessionManager)
         config.sessionManager() >> sessionManager
@@ -78,6 +79,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
         and: "Mocks setup to return the identities"
         def config = Mock(IdentityPickerAuthenticationActionConfig)
         config.identityListAttribute() >> IDENTITIES_ATTRIBUTE_NAME
+        config.keepAttributes() >> Optional.empty()
 
         def sessionManager = Mock(SessionManager)
         config.sessionManager() >> sessionManager
@@ -106,9 +108,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
                             ],
                             [user_id   : "user2",
                              account_id: "id2",
-                             subdomain : "sub2"
-                            ],
-                            [user_id   : "user3",
+                             subdomain : "sub2" ], [user_id   : "user3",
                              account_id: "id3",
                              subdomain : "sub3"
                             ]]
@@ -119,6 +119,7 @@ class IdentityPickerAuthenticationActionTest extends Specification {
         and: "Mocks setup to return the a selected identity, emulating that the user picked one"
         def config = Mock(IdentityPickerAuthenticationActionConfig)
         config.identityListAttribute() >> IDENTITIES_ATTRIBUTE_NAME
+        config.keepAttributes() >> Optional.empty()
 
         def sessionManager = Mock(SessionManager)
         config.sessionManager() >> sessionManager
@@ -160,6 +161,85 @@ class IdentityPickerAuthenticationActionTest extends Specification {
 
         then: "A failed result is received"
         authenticationResult instanceof AuthenticationActionResult.FailedAuthenticationActionResult
+    }
+
+    def "When the action is configured to keep the attributes and one identity exists, the identity is added to the subject attributes "() {
+        given: "An attribute containing some accounts"
+        def identityList = [[user_id   : "user1",
+                             account_id: "id1",
+                             subdomain : "sub1"
+                            ]]
+        def subjectAttributes = [subject: "teddie", identities: identityList]
+        def authnAttributes = AuthenticationAttributes.of(SubjectAttributes.of(subjectAttributes),
+                ContextAttributes.empty())
+
+        and: "Mocks setup to return the identities"
+        def config = Mock(IdentityPickerAuthenticationActionConfig)
+        config.identityListAttribute() >> IDENTITIES_ATTRIBUTE_NAME
+        config.keepAttributes() >> Optional.of(Mock(IdentityPickerAuthenticationActionConfig.KeepAttributesConfiguration) {
+            selectedIdentityOutputAttribute() >> "selected_identity"
+        })
+
+        def sessionManager = Mock(SessionManager)
+        config.sessionManager() >> sessionManager
+
+        def action = new IdentityPickerAuthenticationAction(config)
+
+        when: "The action is invoked"
+        def authenticationResult = action.apply(getActionContext(authnAttributes))
+
+        then:
+        authenticationResult instanceof AuthenticationActionResult.SuccessAuthenticationActionResult
+        def authnAttrs = (authenticationResult as AuthenticationActionResult.SuccessAuthenticationActionResult).authenticationAttributes
+
+        authnAttrs.subject == subjectAttributes.subject
+        authnAttrs.subjectAttributes.identities?.value == identityList
+        authnAttrs.subjectAttributes.selected_identity?.value == identityList[0]
+    }
+
+    def "When the action is configured to keep the attributes and multiple identities exists, the selected identity is added to the subject attributes "() {
+        given: "An attribute containing some accounts"
+        def identityList = [[user_id   : "user1",
+                             account_id: "id1",
+                             subdomain : "sub1"
+                            ],
+                            [user_id   : "user2",
+                             account_id: "id2",
+                             subdomain : "sub2"
+                            ],
+                            [user_id   : "user3",
+                             account_id: "id3",
+                             subdomain : "sub3"
+                            ]]
+        def subjectAttributes = [subject: "teddie", identities: identityList]
+        def authnAttributes = AuthenticationAttributes.of(SubjectAttributes.of(subjectAttributes),
+                ContextAttributes.empty())
+
+        and: "Mocks setup to return the identities"
+        def config = Mock(IdentityPickerAuthenticationActionConfig)
+        config.identityListAttribute() >> IDENTITIES_ATTRIBUTE_NAME
+        config.keepAttributes() >> Optional.of(Mock(IdentityPickerAuthenticationActionConfig.KeepAttributesConfiguration) {
+            selectedIdentityOutputAttribute() >> "selected_identity"
+        })
+
+        def sessionManager = Mock(SessionManager)
+        config.sessionManager() >> sessionManager
+        def pickedIndex = 1
+        sessionManager.get(_ as String) >> Attribute.of("identity-picker-picked_identity",
+                AttributeValue.of(identityList[pickedIndex]))
+
+        def action = new IdentityPickerAuthenticationAction(config)
+
+        when: "The action is invoked"
+        def authenticationResult = action.apply(getActionContext(authnAttributes))
+
+        then:
+        authenticationResult instanceof AuthenticationActionResult.SuccessAuthenticationActionResult
+        def authnAttrs = (authenticationResult as AuthenticationActionResult.SuccessAuthenticationActionResult).authenticationAttributes
+
+        authnAttrs.subject == subjectAttributes.subject
+        authnAttrs.subjectAttributes.identities?.value == identityList
+        authnAttrs.subjectAttributes.selected_identity?.value == identityList[pickedIndex]
     }
 
     AuthenticationActionContext getActionContext(AuthenticationAttributes authnAttributes) {

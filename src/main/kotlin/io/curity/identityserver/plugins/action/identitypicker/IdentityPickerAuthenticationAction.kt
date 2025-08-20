@@ -19,7 +19,12 @@ package io.curity.identityserver.plugins.action.identitypicker
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import se.curity.identityserver.sdk.attribute.*
+import se.curity.identityserver.sdk.attribute.Attribute
+import se.curity.identityserver.sdk.attribute.AttributeValue
+import se.curity.identityserver.sdk.attribute.AuthenticationAttributes
+import se.curity.identityserver.sdk.attribute.ListAttributeValue
+import se.curity.identityserver.sdk.attribute.MapAttributeValue
+import se.curity.identityserver.sdk.attribute.SubjectAttributes
 import se.curity.identityserver.sdk.authenticationaction.AuthenticationAction
 import se.curity.identityserver.sdk.authenticationaction.AuthenticationActionContext
 import se.curity.identityserver.sdk.authenticationaction.AuthenticationActionResult
@@ -77,11 +82,18 @@ class IdentityPickerAuthenticationAction(private val config: IdentityPickerAuthe
     ): AuthenticationActionResult {
         identity as? MapAttributeValue ?: throw IllegalArgumentException("Identity could not be parsed as a Map")
 
-        val replacedAttributes = AuthenticationAttributes.of(
-            SubjectAttributes.of(authenticationAttributes.subject, identity),
-            authenticationAttributes.contextAttributes
-        )
+        var outputAttributes = authenticationAttributes
+        config.keepAttributes().ifPresentOrElse({ it ->
+            val outputAttribute = Attribute.of(it.selectedIdentityOutputAttribute(), identity)
+            outputAttributes = authenticationAttributes.withSubjectAttribute(outputAttribute)
+        }, {
+            outputAttributes = AuthenticationAttributes.of(
+                SubjectAttributes.of(authenticationAttributes.subject, identity),
+                authenticationAttributes.contextAttributes
+            )
 
-        return successfulResult(replacedAttributes)
+        })
+
+        return successfulResult(outputAttributes)
     }
 }
