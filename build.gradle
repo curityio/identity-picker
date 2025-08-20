@@ -1,0 +1,77 @@
+/*
+ * Copyright 2025 Curity AB
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.20'
+    id 'groovy'
+}
+
+group = 'io.curity.identityserver.plugins.action.identitypicker'
+description = 'Curity IdentityPicker Authentication Action'
+if (project.hasProperty('releaseVersion')) {
+    project.version = project.releaseVersion
+} else {
+    project.version = '1.1.0'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'se.curity.identityserver:identityserver.sdk:10.4.0'
+    compileOnly 'org.slf4j:slf4j-api:2.0.12'
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    compileOnly 'jakarta.validation:jakarta.validation-api:3.0.0'
+
+    testImplementation 'se.curity.identityserver:identityserver.sdk:10.4.0'
+    testImplementation 'org.slf4j:slf4j-api:2.0.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.apache.groovy:groovy:4.0.23'
+}
+
+
+kotlin {
+    jvmToolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "started", "passed", "skipped", "failed"
+    }
+}
+
+tasks.register('deployToLocal', Sync) {
+    dependsOn jar
+    from configurations.runtimeClasspath
+    from jar
+    into "${System.env.IDSVR_HOME}/usr/share/plugins/${project.group}.${project.name}"
+}
+
+tasks.register('createRelease', Sync) {
+    dependsOn build
+    dependsOn jar
+    from configurations.runtimeClasspath
+    from jar
+    into layout.buildDirectory.dir('release')
+}
