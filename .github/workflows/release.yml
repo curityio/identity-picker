@@ -1,6 +1,6 @@
 # This workflow will build a curity-sdk-commons with Maven
 
-name: Build & Release Curity SDK Commmons Lib
+name: Build & Release
 
 on:
   workflow_dispatch:
