@@ -142,15 +142,18 @@ All attributes in will be available on the `$_identities` variable. To list them
 #end
 </pre>
 ```
+## Download and installing the Plugin
+
+Download the plugin from the release section, and unzip it into the `${IDSVR_HOME}/usr/share/plugins/${pluginGroup}` directory on each node, including the admin node.
 
 ## Building the Plugin
 
-You can build the plugin by issuing the command `mvn package`. This will produce a JAR file in the `target` directory,
-which can be installed.
+You can build the plugin by issuing the command `./gradlew jar`. This will produce a JAR file in the `buildlibs` directory,
+which can be installed. For creating a release version of the plugin, run `./gradlew createRelease`. This will compile the plugin and collect all the dependencies into a single JAR file in the `build/release` directory.
 
 ## Installing the Plugin
 
-To install the plugin, copy the compiled JAR (and all of its dependencies) into the `${IDSVR_HOME}/usr/share/plugins/${pluginGroup}`
+To install the plugin a plugin built from source, copy the compiled JAR (and all of its dependencies) from the `build/release` folder into the `${IDSVR_HOME}/usr/share/plugins/${pluginGroup}`
 on each node, including the admin node. For more information about installing plugins, refer to the [curity.io/plugins][https://support.curity.io/docs/latest/developer-guide/plugins/index.html#plugin-installation].
 
 ## Required Dependencies
